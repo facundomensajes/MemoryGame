@@ -9,6 +9,37 @@ public class SceneController : MonoBehaviour {
 	public const float offsetY = 2.5f;
 	[SerializeField] private MemoryCard originalCard;
 	[SerializeField] private Sprite[] images;
+	private MemoryCard _firstRevealed;
+	private MemoryCard _secondRevealed;
+	private int _score = 0;
+	[SerializeField] private TextMesh score;
+
+	public bool canReveal {
+		get {return _secondRevealed == null;}
+	}
+
+	public void CardRevealed(MemoryCard card) {
+		if (_firstRevealed == null) {
+			_firstRevealed = card;
+		} else {
+			_secondRevealed = card;
+			StartCoroutine(CheckMatch());
+		}
+	}
+
+	private IEnumerator CheckMatch() {
+		if (_firstRevealed.id == _secondRevealed.id) {
+			_score++;
+			score.text = "Score: " + _score;
+		}
+		else {
+			yield return new WaitForSeconds(.5f);
+			_firstRevealed.Unreveal();
+			_secondRevealed.Unreveal();
+		}
+		_firstRevealed = null;
+		_secondRevealed = null;
+	}
 
 	void Start() {
 		Vector3 startPos = originalCard.transform.position;
