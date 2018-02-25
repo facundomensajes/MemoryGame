@@ -73,5 +73,9 @@ public class SceneController : MonoBehaviour {
 		}
 		return newArray;
 	}
+
+	public void Restart() {
+		Application.LoadLevel("game");
+	}
 }
 
